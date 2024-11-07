@@ -14,5 +14,8 @@
   "type": "module",
   "author": "",
   "license": "ISC",
-  "description": ""
+  "description": "",
+  "devDependencies": {
+    "prisma": "^5.22.0"
+  }
 }
