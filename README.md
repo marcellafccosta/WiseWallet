@@ -33,13 +33,13 @@ Este projeto foi desenvolvido utilizando uma combinação de tecnologias moderna
 
 ### Diagrama de Componentes
 <div>
- <img src="" width="50%">
+ <img src="docs/diagramas/Diagrama de componentes.png" width="100%">
 </div>
 
 
 ### Diagrama de Implantação
 <div>
- <img src="" width="50%">
+ <img src="docs/diagramas/Diagrama de implantação.png" width="100%">
 </div>
 
 
