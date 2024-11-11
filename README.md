@@ -43,10 +43,19 @@ Este projeto foi desenvolvido utilizando uma combinação de tecnologias moderna
 </div>
 
 
-### Diagrama de Sequência<div>
- <img src="" width="50%">
+### Diagramas de Sequência<div>
+
+- Diagrama de sequência UC - Cadastrar
+ <img src="docs/diagramas/DiagramaSequenciaCadastrar.png" width="50%">
 </div>
 
+- Diagrama de sequência UC - GerenciarGastos
+ <img src="docs/diagramas/DiagramaSequenciaUCGerenciarGastos.png" width="35%">
+</div>
+
+- Diagrama de sequência UC - GerenciarCategoria
+ <img src="docs/diagramas/DiagramaDeSequenciaCategoria.png" width="35%">
+</div>
 
 
 ### Diagrama de Comunicação
