@@ -65,5 +65,5 @@ Este projeto foi desenvolvido utilizando uma combinação de tecnologias moderna
 
 ### Diagrama de Estados
 <div>
- <img src="" width="50%">
+ <img src="docs/diagramas/DiagramaDeEstado.png" width="100%" height="300px">
 </div>
