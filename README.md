@@ -10,9 +10,9 @@ O sistema está sendo desenvolvido como parte da disciplina de Projeto de Softwa
 
 ### Tecnologias Utilizadas
 Este projeto foi desenvolvido utilizando uma combinação de tecnologias modernas que garantem um sistema eficiente, escalável e responsivo. As principais tecnologias empregadas são:
-*
-*
-*
+* Node.js
+* ReactJS
+* PostgreSQL
 
 
 
