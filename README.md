@@ -20,7 +20,7 @@ Este projeto foi desenvolvido utilizando uma combinação de tecnologias moderna
 
 ### Diagrama de Caso de Uso
 <div>
- <img src="" width="50%">
+ <img src="docs/diagramas/diagramaCasoDeUso.png" width="25%">
 </div>
 
 
