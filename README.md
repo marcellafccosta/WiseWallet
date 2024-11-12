@@ -61,7 +61,7 @@ Este projeto foi desenvolvido utilizando uma combinação de tecnologias moderna
 ### Diagrama de Comunicação
 
 - Diagrama de Comunicação UC - Cadastrar
- <img src="docs/diagramas/" width="35%">
+ <img src="docs/diagramas/diagrama de comunicacao - cadastro.png" width="35%">
 </div>
 
 - Diagrama de Comunicação UC - GerenciarGastos
@@ -69,7 +69,7 @@ Este projeto foi desenvolvido utilizando uma combinação de tecnologias moderna
 </div>
 
 - Diagrama de Comunicação UC - GerenciarCategoria
- <img src="docs/diagramas/" width="35%">
+ <img src="docs/diagramas/diagrama de comunicacao - gerenciar categoria.png" width="35%">
 </div>
 
 ### Diagrama de Estados
