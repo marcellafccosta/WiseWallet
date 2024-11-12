@@ -46,7 +46,7 @@ Este projeto foi desenvolvido utilizando uma combinação de tecnologias moderna
 ### Diagramas de Sequência<div>
 
 - Diagrama de sequência UC - Cadastrar
- <img src="docs/diagramas/DiagramaSequenciaCadastrar.png" width="50%">
+ <img src="docs/diagramas/DiagramaSequenciaCadastrar.png" width="35%">
 </div>
 
 - Diagrama de sequência UC - GerenciarGastos
@@ -59,11 +59,20 @@ Este projeto foi desenvolvido utilizando uma combinação de tecnologias moderna
 
 
 ### Diagrama de Comunicação
-<div>
- <img src="" width="50%">
+
+- Diagrama de Comunicação UC - Cadastrar
+ <img src="docs/diagramas/" width="35%">
+</div>
+
+- Diagrama de Comunicação UC - GerenciarGastos
+ <img src="docs/diagramas/diagrama de comunicacao - gerenciar gastos.png" width="35%">
+</div>
+
+- Diagrama de Comunicação UC - GerenciarCategoria
+ <img src="docs/diagramas/" width="35%">
 </div>
 
 ### Diagrama de Estados
 <div>
- <img src="docs/diagramas/DiagramaDeEstado.png" width="100%" height="300px">
+ <img src="docs/diagramas/DiagramaDeEstado.png" width="100%">
 </div>
