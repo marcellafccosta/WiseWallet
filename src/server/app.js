@@ -1,6 +1,6 @@
 import express from 'express';
 import cors from 'cors';
-import routes from './routes';  // Importa as rotas definidas em outro arquivo (GastoRoutes, CategoriaRoutes)
+import routes from "./src/routes/routes.js";  // Importa as rotas definidas em outro arquivo (GastoRoutes, CategoriaRoutes)
 
 const app = express();
 
