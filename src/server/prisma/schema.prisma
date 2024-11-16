@@ -24,6 +24,13 @@ model Categoria {
   gastos Gasto[]
 }
 
+model usuario {
+  idusuario        Int              @id @default(autoincrement())
+  nome             String           @db.VarChar(255)
+  email            String           @unique @db.VarChar(255)
+  senha            String           @db.VarChar(255)
+}
+
 enum Formato {
   CREDITO
   DEBITO
