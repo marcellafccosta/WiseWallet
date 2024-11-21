@@ -5,69 +5,76 @@ import '../style/Homepage.css';
 import AppHeader from '../components/Header';
 import logo from "../assets/logo.png";
 
-const { Header, Content, Footer } = Layout;
+const { Content, Footer } = Layout;
 
-const Homepage = () => {
-    return (
-        <><AppHeader /><Layout className="homepage-layout">
+// Hero Section Component
+const HeroSection = () => (
+    <section className="homepage__hero">
+        <Row>
+            <Col xs={24} md={12}>
+                <h1>Gerencie suas finanças de forma inteligente</h1>
+                <p>Com o WiseWallet, você tem total controle sobre seus gastos, receitas e planejamento financeiro. Simplifique sua vida financeira hoje mesmo.</p>
+                <Button type="primary" size="large" className='homepage__button'>
+                    <Link to="/cadastro">Comece Agora</Link>
+                </Button>
+            </Col>
+            
+                <img src={logo} alt="Logo WiseWallet" className="homepage__hero-image" />
+            
+        </Row>
+    </section>
+);
 
+// Features Section Component
+const Features = () => (
+    <section className="homepage__features">
+        <h2>Funcionalidades Principais</h2>
+        <div className="homepage__feature-card-container">
+            <div className="homepage__feature-card">
+                <h3>Relatórios Detalhados</h3>
+                <p>Acompanhe seus gastos e receitas com gráficos intuitivos e relatórios personalizados.</p>
+            </div>
+            <div className="homepage__feature-card">
+                <h3>Organização Simples</h3>
+                <p>Classifique suas despesas em categorias e mantenha tudo organizado com facilidade.</p>
+            </div>
+        </div>
+    </section>
+);
 
-            {/* Conteúdo Principal */}
-            <Content className="homepage-content">
-                <section className="hero">
-                    <Row>
-                        <Col xs={24} md={12}>
-                            <h1>Gerencie suas finanças de forma inteligente</h1>
-                            <p>Com o WiseWallet, você tem total controle sobre seus gastos, receitas e planejamento financeiro. Simplifique sua vida financeira hoje mesmo.</p>
-                            <Button type="primary" size="large" className='botao'>
-                                <Link to="/cadastro">Comece Agora</Link>
-                            </Button>
-                        </Col>
-                        <Col xs={24} md={12}>
-                            <img
-                                src={logo}
-                                alt="Logo"
-                                className="hero-image" />
-                        </Col>
-                    </Row>
-                </section>
+// Benefits Section Component
+const Benefits = () => (
+    <section className="homepage__benefits">
+        <h2>Por que usar o WiseWallet?</h2>
+        <ul>
+            <li>Controle total sobre suas finanças.</li>
+            <li>Interface simples e amigável.</li>
+            <li>Segurança e privacidade garantidas.</li>
+            <li>Ferramentas poderosas para planejamento financeiro.</li>
+        </ul>
+    </section>
+);
 
-                <section className="features">
-                    <h2>Funcionalidades Principais</h2>
-                    <div className="feature-card-container">
-                        <div className="feature-card">
-                            <h3>Relatórios Detalhados</h3>
-                            <p>Acompanhe seus gastos e receitas com gráficos intuitivos e relatórios personalizados.</p>
-                        </div>
-                        <div className="feature-card">
-                            <h3>Organização Simples</h3>
-                            <p>Classifique suas despesas em categorias e mantenha tudo organizado com facilidade.</p>
-                        </div>
+// Footer Component
+const HomepageFooter = () => (
+    <Footer className="homepage__footer">
+        <p>© 2024 WiseWallet. Todos os direitos reservados.</p>
+    </Footer>
+);
 
-                    </div>
-                </section>
-
-
-                <section className="benefits">
-                    <h2>Por que usar o WiseWallet?</h2>
-                    <ul>
-                        <li>Controle total sobre suas finanças.</li>
-                        <li>Interface simples e amigável.</li>
-                        <li>Segurança e privacidade garantidas.</li>
-                        <li>Ferramentas poderosas para planejamento financeiro.</li>
-                    </ul>
-                </section>
+// Main Homepage Component
+const Homepage = () => (
+    <>
+        <AppHeader />
+        <Layout className="homepage__layout">
+            <Content className="homepage__content">
+                <HeroSection />
+                <Features />
+                <Benefits />
             </Content>
-
-            {/* Rodapé */}
-            <Footer className="homepage-footer">
-                <p>© 2024 WiseWallet. Todos os direitos reservados.</p>
-                <p>
-                    <Link to="/termos">Termos de Uso</Link> | <Link to="/privacidade">Política de Privacidade</Link>
-                </p>
-            </Footer>
-        </Layout></>
-    );
-};
+            <HomepageFooter />
+        </Layout>
+    </>
+);
 
 export default Homepage;
