@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useContext, useRef } from 'react';
 import { Table, message, Button, Form, Input, Popconfirm, InputNumber } from 'antd';
 import axios from 'axios';
+import AppHeader from '../components/Header';
 
 // Definição do contexto de edição
 const EditableContext = React.createContext(null);
@@ -283,16 +284,15 @@ const App = () => {
   };
 
   return (
-    <div>
+    <><AppHeader /><div>
       <Table
         bordered
         dataSource={dataSource}
         columns={editableColumns}
         components={components}
         rowClassName="editable-row"
-        pagination={false}
-      />
-    </div>
+        pagination={false} />
+    </div></>
   );
 };
 

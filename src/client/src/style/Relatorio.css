@@ -1,0 +1,58 @@
+/* Estilos para a página Relatório */
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Arial', sans-serif;
+    background-color: #f9f9f9; /* Fundo suave */
+}
+
+h1 {
+    text-align: center;
+    font-size: 2.5rem;
+    margin: 20px 0;
+    color: #333;
+    font-weight: bold;
+}
+
+.graficos {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px; /* Espaçamento uniforme entre os cards */
+    padding: 20px;
+}
+
+.graficos > div {
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    width: 100%;
+    max-width: 350px; /* Largura máxima */
+    text-align: center;
+    transition: transform 0.3s ease;
+    height: 400px; /* Altura fixa para manter proporção */
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* Centraliza o gráfico */
+    align-items: center;
+}
+
+.graficos > div:hover {
+    transform: scale(1.03); /* Leve zoom ao passar o mouse */
+}
+
+.graficos h2 {
+    font-size: 1.8rem;
+    margin-bottom: 15px;
+    color: #555;
+    font-weight: 500;
+}
+
+.graficos canvas {
+    max-width: 100%;
+    max-height: 100%;
+    height: auto;
+    width: auto;
+}

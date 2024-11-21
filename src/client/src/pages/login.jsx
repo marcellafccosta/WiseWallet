@@ -44,7 +44,16 @@ const Login = () => {
   }
 
   return (
-    <div className="login-container">
+    <div
+      style={{
+        maxWidth: "400px",
+        margin: "50px auto",
+        padding: "20px",
+        border: "1px solid #ddd",
+        borderRadius: "8px",
+      }}>
+      <h2 style={{ textAlign: "center" }}>Login</h2>
+
       <Form
         className="login-form"
         name="login"
@@ -53,7 +62,7 @@ const Login = () => {
         }}
         onFinish={onFinish}
       >
-        <div className="login-title">Login</div>
+      
 
         <Form.Item
           name="email"

@@ -1,0 +1,124 @@
+/* Estilo Geral */
+body {
+    margin: 0;
+    font-family: 'Arial', sans-serif;
+}
+
+.homepage-layout {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.logo {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.menu a {
+    margin: 0 10px;
+    color: #ffffff;
+    text-decoration: none;
+}
+
+.menu a:hover {
+    text-decoration: underline;
+}
+
+/* Seção Hero */
+.hero {
+    background-color: #f9f9f9;
+    padding: 40px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.hero h1 {
+    font-size: 2.5rem;
+    margin-bottom: 20px;
+}
+
+.hero p {
+    font-size: 1.2rem;
+    margin-bottom: 20px;
+    color: #555;
+}
+
+.hero-image {
+    max-width: 50%;
+    height: auto;
+}
+
+.features {
+    background-color: #ffffff;
+    padding: 40px 20px;
+    text-align: center;
+    display: flex; /* Ativa o Flexbox */
+    flex-direction: column; /* Organiza os elementos em coluna */
+    align-items: center; /* Centraliza os itens horizontalmente */
+}
+
+.features h2 {
+    font-size: 2rem;
+    margin-bottom: 20px;
+}
+
+.feature-card-container {
+    display: flex; /* Ativa o Flexbox para os cards */
+    flex-wrap: wrap; /* Permite quebra de linha se necessário */
+    justify-content: center; /* Centraliza os cards horizontalmente */
+    gap: 20px; /* Espaço entre os cards */
+}
+
+.feature-card {
+    background-color: #f0f0f0;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+    width: 300px; /* Define uma largura fixa para os cards */
+    text-align: center;
+}
+
+.feature-card:hover {
+    transform: scale(1.05); /* Adiciona efeito de zoom ao passar o mouse */
+}
+
+
+/* Benefícios */
+.benefits {
+    background-color: #f9f9f9;
+    padding: 40px 20px;
+}
+
+.benefits h2 {
+    font-size: 2rem;
+    margin-bottom: 20px;
+}
+
+.benefits ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.benefits li {
+    font-size: 1.2rem;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+/* Rodapé */
+.homepage-footer {
+    background-color: #5ab334;
+    color: #ffffff;
+    text-align: center;
+    padding: 10px 20px;
+    font-size: 0.9rem;
+}
+
+.botao {
+    background-color: #5ab334;
+    border-color: #5ab334;
+}
