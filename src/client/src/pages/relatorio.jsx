@@ -8,6 +8,7 @@ const Relatorio = () => {
     const [dataCategoria, setDataCategoria] = useState([]); // Dados para o gráfico de categorias
     const [dataMes, setDataMes] = useState([]); // Dados para o gráfico de meses
     const [dataAno, setDataAno] = useState([]); // Dados para o gráfico de anos
+    const [dataFormato, setDataFormato] = useState([]); // Dados para o gráfico de formatos
     const [categoryMap, setCategoryMap] = useState({}); // Mapa para as categorias
 
     const formatDate = (isoDate) => {
@@ -18,7 +19,7 @@ const Relatorio = () => {
         const month = String(date.getMonth() + 1).padStart(2, '0'); // Corrigido para '0'
         const year = String(date.getFullYear()); // Mantém o ano completo
         return `${day}/${month}/${year}`;
-     };
+    };
 
     useEffect(() => {
         const fetchCategorias = async () => {
@@ -61,7 +62,7 @@ const Relatorio = () => {
                 console.error('Erro ao buscar os dados por mês:', error);
             }
         };
-        
+
 
         const fetchGastosPorAno = async () => {
             try {
@@ -76,13 +77,30 @@ const Relatorio = () => {
                 console.error('Erro ao buscar os dados por ano:', error);
             }
         };
-        
+
+
+        const fetchGastosPorFormato = async () => {
+            try {
+                const response = await axios.get('http://localhost:3000/relatorio/formato');
+                setDataFormato(
+                    response.data.map(item => ({
+                        type: item.formato, // Nome do formato (CREDITO, DEBITO, etc.)
+                        valor: item.total, // Valor total para o formato
+                    }))
+                );
+            } catch (error) {
+                console.error('Erro ao buscar os dados por formato:', error);
+            }
+        };
+
+
 
         const loadData = async () => {
             await fetchCategorias();
             await fetchGastosPorCategoria();
             await fetchGastosPorMes();
             await fetchGastosPorAno();
+            await fetchGastosPorFormato();
         };
 
         loadData();
@@ -106,7 +124,7 @@ const Relatorio = () => {
         width: 300, // Largura consistente do gráfico
         interactions: [{ type: 'element-active' }],
     };
-    
+
 
     const configMes = {
         data: dataMes,
@@ -146,22 +164,47 @@ const Relatorio = () => {
         interactions: [{ type: 'element-active' }],
     };
 
+    const configFormato = {
+        data: dataFormato,
+        angleField: 'valor',
+        colorField: 'type',
+        radius: 0.8,
+        label: {
+            content: '{name} {percentage}',
+            type: 'spider',
+        },
+        legend: {
+            position: 'bottom',
+        },
+        appendPadding: 10, // Espaçamento interno
+        autoFit: true, // Permite ajustar automaticamente ao contêiner
+        height: 300, // Altura consistente do gráfico
+        width: 300, // Largura consistente do gráfico
+        interactions: [{ type: 'element-active' }],
+    }
+
     return (
         <><AppHeader /><div style={{ width: '100%', height: 'auto' }}>
             <h1>Relatório de Gastos</h1>
             <div className='graficos'>
-            <div style={{ marginBottom: '50px' }}>
-                <h2>Gastos por Categoria</h2>
-                <Pie {...configCategoria} />
-            </div>
-            <div style={{ marginBottom: '50px' }}>
-                <h2>Gastos por Mês</h2>
-                <Pie {...configMes} />
-            </div>
-            <div>
-                <h2>Gastos por Ano</h2>
-                <Pie {...configAno} />
-            </div>
+                <div style={{ marginBottom: '50px' }}>
+                    <h2>Gastos por Categoria</h2>
+                    <Pie {...configCategoria} />
+                </div>
+                <div style={{ marginBottom: '50px' }}>
+                    <h2>Gastos por Mês</h2>
+                    <Pie {...configMes} />
+                </div>
+                <div>
+                    <h2>Gastos por Ano</h2>
+                    <Pie {...configAno} />
+                </div>
+
+                <div>
+                    <h2>Gastos por Formato</h2>
+                    <Pie {...configFormato} />
+                </div>
+
             </div>
         </div></>
     );

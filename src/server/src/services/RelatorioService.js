@@ -78,6 +78,25 @@ export class RelatorioService {
             throw new Error("Erro ao buscar gastos por ano.");
         }
     }
+
+
+    async getGastosPorFormato() {
+        try {
+            const gastos = await prismaClient.gasto.groupBy({
+                by: ['formato'],
+                _sum: {
+                    quantia: true
+                },
+            });
+            return gastos.map(item => ({
+                formato: item.formato,
+                total: item._sum.quantia,
+            }));
+        } catch (error) {
+            console.error('Erro ao buscar gastos por formato:', error);
+            throw new Error('Erro ao buscar gastos por formato.');
+        }
+    }
 }
 
 export default new RelatorioService();

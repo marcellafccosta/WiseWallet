@@ -1,25 +1,8 @@
-/* Estilos para a página Relatório */
-
-body {
-    margin: 0;
-    padding: 0;
-    font-family: 'Arial', sans-serif;
-    background-color: #f9f9f9; /* Fundo suave */
-}
-
-h1 {
-    text-align: center;
-    font-size: 2.5rem;
-    margin: 20px 0;
-    color: #333;
-    font-weight: bold;
-}
-
 .graficos {
     display: flex;
-    flex-wrap: wrap;
+    flex-wrap: wrap; /* Permite que os itens quebrem linha */
     justify-content: center;
-    gap: 20px; /* Espaçamento uniforme entre os cards */
+    gap: 20px; /* Espaçamento uniforme entre os gráficos */
     padding: 20px;
 }
 
@@ -28,14 +11,14 @@ h1 {
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     padding: 20px;
-    width: 100%;
-    max-width: 350px; /* Largura máxima */
+    flex: 1 1 calc(50% - 40px); /* Cada gráfico ocupa 50% da linha menos o espaço do gap */
+    max-width: 500px; /* Largura máxima */
     text-align: center;
     transition: transform 0.3s ease;
     height: 400px; /* Altura fixa para manter proporção */
     display: flex;
     flex-direction: column;
-    justify-content: center; /* Centraliza o gráfico */
+    justify-content: center; /* Centraliza o conteúdo dentro da div */
     align-items: center;
 }
 
@@ -50,9 +33,17 @@ h1 {
     font-weight: 500;
 }
 
-.graficos canvas {
-    max-width: 100%;
-    max-height: 100%;
-    height: auto;
-    width: auto;
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Arial', sans-serif;
+    background-color: #f9f9f9;
+}
+
+h1 {
+    text-align: center;
+    font-size: 2.5rem;
+    margin: 20px 0;
+    color: #333;
+    font-weight: bold;
 }

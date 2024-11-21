@@ -30,6 +30,16 @@ class RelatorioController {
             res.status(500).json({ error: error.message });
     }
 }
+
+
+    async getGastsoPorFormato(req, res) {
+        try {
+            const gastosPorFormato = await RelatorioService.getGastosPorFormato();
+            res.status(200).json(gastosPorFormato);
+        } catch (error) {
+            res.status(500).json({ error: error.message });
+        }
+    }
 }
 
 export default RelatorioController;
