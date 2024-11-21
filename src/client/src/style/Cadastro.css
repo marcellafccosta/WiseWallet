@@ -1,0 +1,112 @@
+body, html {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden; /* Remove o scroll */
+}
+
+/* Container principal */
+.Cadastro-container {
+    display: flex;
+    flex-direction: row; /* Posiciona a imagem e o formulário lado a lado */
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    width: 100vw; /* Garante que o container ocupa toda a largura */
+    overflow: hidden; /* Remove qualquer overflow do conteúdo */
+    box-sizing: border-box;
+}
+
+/* Imagem lateral */
+.Cadastro-image {
+    flex: 1;
+    max-width: 50%;
+
+}
+
+.Cadastro-image img {
+    max-width: 90%; /* Ajusta largura da imagem */
+    height: auto;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    max-height: 100%; 
+}
+
+/* Formulário */
+.cadastro-form {
+    flex: 1; /* Ocupa 50% do espaço */
+    max-width: 50%; /* Garante divisão exata */
+    padding: 4rem;
+    border-radius: 10px;
+    height: auto; /* Ajusta ao conteúdo */
+   
+}
+
+.cadastro-title {
+    margin-bottom: 20px;
+    font-size: 1.8rem;
+    color: #5ab334;
+    text-align: center;
+}
+
+/* Inputs */
+.cadastro-form .ant-input,
+.cadastro-form .ant-input-password {
+    height: 45px;
+    border-radius: 8px;
+}
+
+.cadastro-form .ant-form-item {
+    margin-bottom: 20px;
+}
+
+/* Botão principal */
+.cadastro-form .ant-btn-primary {
+    height: 45px;
+    font-size: 1rem;
+    border-radius: 8px;
+    background-color: #5ab334; /* Cor principal */
+    border-color: #5ab334;
+}
+
+.cadastro-form .ant-btn-primary:hover {
+    background-color: #2e8b57;
+    border-color: #2e8b57;
+}
+
+/* Link para login */
+.possuiConta {
+    text-align: center;
+    font-size: 0.9rem;
+    color: #555;
+}
+
+.possuiConta .ant-btn-link {
+    padding: 0;
+    font-size: 0.9rem;
+    color: #5ab334;
+}
+
+.possuiConta .ant-btn-link:hover {
+    color: #2e8b57;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .Cadastro-container {
+        flex-direction: column; /* Alinha verticalmente em telas menores */
+        padding: 20px;
+    }
+
+    .Cadastro-image,
+    .cadastro-form {
+        max-width: 100%; /* Ambos ocupam toda a largura */
+        flex: none;
+    }
+
+    .Cadastro-image img {
+        max-width: 100%;
+        height: auto;
+    }
+}

@@ -1,3 +1,112 @@
-.login-title {
-    color: #003366;
+/* Remove margens e paddings do body */
+body, html {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden; /* Remove o scroll */
+}
+
+/* Container principal */
+.Login-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    width: 100vw; /* Garante que o container ocupa toda a largura */
+    overflow: hidden; /* Remove qualquer overflow do conteúdo */
+    box-sizing: border-box; /* Inclui bordas e padding no tamanho total */
+}
+
+
+/* Estilo para a imagem */
+.Login-image {
+    flex: 1; /* Ocupa 50% do espaço */
+    max-width: 50%; /* Garante divisão exata */    
+}
+
+.Login-image img {
+    max-width: 90%; /* Ajusta largura da imagem */
+    height: auto;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    max-height: 100%; 
+}
+
+/* Estilo para o formulário */
+.login-form {
+    flex: 1; /* Ocupa 50% do espaço */
+    max-width: 50%; /* Garante divisão exata */
+    padding: 4rem;
+    border-radius: 10px;
+    height: auto; /* Ajusta ao conteúdo */
+}
+
+.login-form h2 {
+    margin-bottom: 20px;
+    font-size: 1.8rem;
+    color: #5ab334;
+    text-align: center;
+}
+
+/* Inputs do formulário */
+.login-form .ant-input,
+.login-form .ant-input-password {
+    height: 45px;
+    border-radius: 8px;
+}
+
+.login-form .ant-form-item {
+    margin-bottom: 20px;
+}
+
+/* Botão de login */
+.login-form .ant-btn-primary {
+    height: 45px;
+    font-size: 1rem;
+    border-radius: 8px;
+    background-color: #5ab334; /* Cor principal */
+    border-color: #5ab334;
+}
+
+.login-form .ant-btn-primary:hover {
+    background-color: #2e8b57; /* Cor ao passar o mouse */
+    border-color: #2e8b57;
+}
+
+/* Botão de link para cadastro */
+.login-form .possuiConta {
+    margin-top: 10px;
+    text-align: center;
+    font-size: 0.9rem;
+    color: #555;
+}
+
+.login-form .ant-btn-link {
+    font-size: 0.9rem;
+    padding: 0;
+    color: #5ab334;
+}
+
+.login-form .ant-btn-link:hover {
+    color: #2e8b57;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .Login-container {
+        flex-direction: column; /* Alinha a imagem e o formulário verticalmente */
+        padding: 20px;
+    }
+
+    .Login-image,
+    .login-form {
+        max-width: 100%; /* Ambos ocupam toda a largura */
+        flex: none;
+    }
+
+    .Login-image img {
+        max-width: 100%; /* Ajusta largura da imagem */
+    }
 }

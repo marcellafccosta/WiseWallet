@@ -2,13 +2,15 @@ import React from "react";
 import { Form, Input, Button, message } from "antd";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import "../style/Cadastro.css"; 
+import fotoCadastro from '../assets/orgg.jpg';
 
 const CadastroUsuario = () => {
-  const [form] = Form.useForm(); 
+  const [form] = Form.useForm();
   const navigate = useNavigate();
+
   const onFinish = async (values) => {
     try {
-      // Faz a requisição POST para a URL
       const response = await axios.post("http://localhost:3000/usuario", values);
       message.success("Usuário cadastrado com sucesso!");
       console.log(response.data);
@@ -23,26 +25,24 @@ const CadastroUsuario = () => {
 
   const handleLoginClick = () => {
     navigate('/login');
-  }
+  };
+
   return (
-    <div
-      style={{
-        maxWidth: "400px",
-        margin: "50px auto",
-        padding: "20px",
-        border: "1px solid #ddd",
-        borderRadius: "8px",
-      }}
-    >
-      <h2 style={{ textAlign: "center" }}>Cadastro de Usuário</h2>
+    <div className="Cadastro-container">
+      <div className="Cadastro-image">
+      <img src={fotoCadastro} alt="Cadastro" />
+      </div>
       <Form
-        form={form} // Associa o formulário ao componente
+        className="cadastro-form"
+        form={form}
         name="cadastroUsuario"
         layout="vertical"
         onFinish={onFinish}
         autoComplete="off"
       >
-         <Form.Item
+        <h2 className="cadastro-title">Cadastro de Usuário</h2>
+        
+        <Form.Item
           label="Nome"
           name="nome"
           rules={[
@@ -51,6 +51,7 @@ const CadastroUsuario = () => {
         >
           <Input placeholder="Digite seu nome" />
         </Form.Item>
+
         <Form.Item
           label="Email"
           name="email"
@@ -77,7 +78,7 @@ const CadastroUsuario = () => {
           <Button type="primary" htmlType="submit" block>
             Cadastrar
           </Button>
-          <div>
+          <div className="possuiConta">
             Já possui uma conta?{' '}
             <Button type="link" onClick={handleLoginClick}>
               Login
