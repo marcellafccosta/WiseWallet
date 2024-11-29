@@ -44,22 +44,25 @@ export class UsuarioController{
 
     async updateUser(req, res) {
         try {
-            const { id } = req.params;
-            const userData = req.body;
-            const updatedUser = await UsuarioService.updateUser(id, userData);
-
-            if (updatedUser) {
-                return res.status(200).json({ message: 'Usuário atualizado com sucesso.', usuario: updatedUser });
-            } else {
-                return res.status(404).json({ message: `Usuário com ID ${id} não encontrado.` });
-            }
+            const { id } = req.params; // ID do usuário
+            const { nome, email, senhaAtual, senhaNova } = req.body;
+    
+            // Chamar o serviço para verificar e atualizar os dados
+            const usuarioAtualizado = await UsuarioService.updateUser(id, { nome, email, senhaAtual, senhaNova });
+    
+            return res.status(200).json({ 
+                message: "Dados atualizados com sucesso!", 
+                usuario: usuarioAtualizado 
+            });
         } catch (error) {
-            return res.status(500).json({
-                message: 'Não foi possível atualizar o usuário. Verifique os dados e tente novamente.',
-                error: error.message
+            return res.status(400).json({ 
+                message: "Não foi possível atualizar os dados.", 
+                error: error.message 
             });
         }
     }
+    
+    
     async deleteUser(req, res) {
         try {
             const { id } = req.params;

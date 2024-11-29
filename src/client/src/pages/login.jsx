@@ -13,7 +13,6 @@ const Login = () => {
     try {
       console.log('Valores recebidos do formulário: ', values);
 
-      // Fazendo a requisição de login para o backend
       const response = await axios.post('http://localhost:3000/usuario/login', {
         email: values.email,
         senha: values.senha,
@@ -23,11 +22,10 @@ const Login = () => {
 
       const { token, usuario } = response.data; 
 
-      // Verifica se o ID do usuário está na resposta
       if (usuario && usuario.idusuario) {
-        localStorage.setItem('idusuario', usuario.idusuario); // Salva o ID do usuário no localStorage
+        localStorage.setItem('idusuario', usuario.idusuario);
         message.success(`Bem-vindo, ${usuario.nome}!`);
-        navigate(`/perfil/${usuario.idusuario}`);
+        navigate(`/perfil`);
       } else {
         message.error("ID do usuário não encontrado na resposta.");
         return;

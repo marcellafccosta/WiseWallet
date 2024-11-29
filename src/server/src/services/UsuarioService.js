@@ -23,23 +23,54 @@ export class UsuarioService{
         }
     }
 
-    async updateUser(userId, userData) {
+    async updateUser(userId, { nome, email, senhaAtual, senhaNova }) {
         try {
-            const usuarioAtualizado = await prismaClient.usuario.update({
-                where: {
-                    idusuario: parseInt(userId)
-                },
-                data: {
-                    nome: userData.nome,
-                    email: userData.email,
-                    senha: userData.senha
-                }
+            // Buscar o usuário pelo ID
+            const usuario = await prismaClient.usuario.findUnique({
+                where: { idusuario: parseInt(userId) }
             });
+    
+            if (!usuario) {
+                throw new Error("Usuário não encontrado.");
+            }
+    
+            const updateData = {};
+    
+            // Verificar se o nome precisa ser atualizado
+            if (nome) {
+                updateData.nome = nome;
+            }
+    
+            // Verificar se o email precisa ser atualizado
+            if (email) {
+                updateData.email = email;
+            }
+    
+            // Verificar e atualizar a senha, se fornecida
+            if (senhaAtual && senhaNova) {
+                const senhaValida = await bcrypt.compare(senhaAtual, usuario.senha);
+                if (!senhaValida) {
+                    throw new Error("Senha atual está incorreta.");
+                }
+    
+                // Criptografar a nova senha
+                const senhaCriptografada = await bcrypt.hash(senhaNova, SALT_ROUNDS);
+                updateData.senha = senhaCriptografada;
+            }
+    
+            // Atualizar os dados no banco de dados
+            const usuarioAtualizado = await prismaClient.usuario.update({
+                where: { idusuario: parseInt(userId) },
+                data: updateData
+            });
+    
             return usuarioAtualizado;
         } catch (error) {
-            throw new Error("Erro ao atualizar usuário: " + error.message);
+            throw new Error("Erro ao atualizar os dados: " + error.message);
         }
     }
+    
+    
 
     async deleteUser(id) {
         try {

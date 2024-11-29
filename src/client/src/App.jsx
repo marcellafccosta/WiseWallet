@@ -6,6 +6,7 @@ import Cadastro from '../src/pages/cadastro'
 import Login from '../src/pages/login'
 import Relatorio from '../src/pages/relatorio'
 import Homepage from '../src/pages/homepage'
+import Perfil from '../src/pages/perfil';
 
 
 function App() {
@@ -19,6 +20,7 @@ function App() {
         <Route path="/cadastro" element={<Cadastro/>} />
         <Route path="/login" element={<Login/>} />
         <Route path="/relatorio" element={<Relatorio/>} />
+        <Route path="/perfil" element={<Perfil />} />
         </Routes>
       </Router>
     </>
