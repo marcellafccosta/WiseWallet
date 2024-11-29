@@ -10,5 +10,6 @@ router.get('/:id', (req, res) => gastoController.getById(req, res));
 router.post('/', (req, res) => gastoController.createGasto(req, res));
 router.put('/:id', (req, res) => gastoController.updateGasto(req, res));
 router.delete('/:id', (req, res) => gastoController.deleteGasto(req, res));
+router.get('/usuario/:usuarioId', (req, res) => gastoController.getByUsuarioId(req, res));
 
 export { router as GastoRoutes };

@@ -33,13 +33,15 @@ export class GastoService {
                     data: new Date(gastoData.data),
                     parcelas: gastoData.parcelas,
                     formato: gastoData.formato,
-                    categoria: { connect: { id: gastoData.categoriaId } }
+                    categoria: { connect: { id: gastoData.categoriaId } },  // Conectando à categoria
+                    usuario: { connect: { idusuario: gastoData.usuarioId } }  // Conectando ao usuário
                 }
             });
         } catch (error) {
             throw new Error("Erro ao criar gasto: " + error.message);
         }
     }
+    
 
     async updateGasto(id, gastoData) {
         try {
@@ -74,6 +76,17 @@ export class GastoService {
             return await prismaClient.gasto.delete({ where: { id: parseInt(id) } });
         } catch (error) {
             throw new Error("Erro ao deletar gasto: " + error.message);
+        }
+    }
+
+    async getByUsuarioId(usuarioId) {
+        try {
+            return await prismaClient.gasto.findMany({
+                where: { usuarioId: parseInt(usuarioId) },
+                include: { categoria: true } // Inclui dados da categoria relacionada
+            });
+        } catch (error) {
+            throw new Error("Erro ao buscar gastos do usuário: " + error.message);
         }
     }
 }

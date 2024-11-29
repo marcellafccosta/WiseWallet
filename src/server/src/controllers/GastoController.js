@@ -61,6 +61,19 @@ class GastoController {
             res.status(500).json({ error: error.message });
         }
     }
+
+    async getByUsuarioId(req, res) {
+        const { usuarioId } = req.params;
+        try {
+            const gastos = await GastoService.getByUsuarioId(usuarioId);
+            if (gastos.length === 0) {
+                return res.status(404).json({ message: "Nenhum gasto encontrado para este usuário" });
+            }
+            res.status(200).json(gastos);
+        } catch (error) {
+            res.status(500).json({ error: error.message });
+        }
+    }
 }
 
 export default GastoController;

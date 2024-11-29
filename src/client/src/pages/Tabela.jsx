@@ -1,149 +1,54 @@
 import React, { useState, useEffect, useContext, useRef } from 'react';
-import { Table, message, Button, Form, Input, Popconfirm, InputNumber } from 'antd';
+import { Table, message, Button, Popconfirm } from 'antd';
 import axios from 'axios';
 import AppHeader from '../components/Header';
+import ModalGasto from '../components/modal'; // Certifique-se de importar o componente ModalGasto
 
-// Definição do contexto de edição
 const EditableContext = React.createContext(null);
 
-// Componente de linha editável
-const EditableRow = ({ index, ...props }) => {
-  const [form] = Form.useForm();
-  return (
-    <Form form={form} component={false}>
-      <EditableContext.Provider value={form}>
-        <tr {...props} />
-      </EditableContext.Provider>
-    </Form>
-  );
-};
+// Função para célula editável
+const EditableTable = ({ editable, children, ...restProps }) => (
+  <td {...restProps}>
+    {editable ? children : null}
+  </td>
+);
 
-// Componente de célula editável
-const EditableCell = ({
-  title,
-  editable,
-  children,
-  dataIndex,
-  record,
-  handleSave,
-  ...restProps
-}) => {
-  const [editing, setEditing] = useState(false);
-  const inputRef = useRef(null);
-  const form = useContext(EditableContext);
-
-  useEffect(() => {
-    if (editing) {
-      inputRef.current?.focus();
-    }
-  }, [editing]);
-
-  const toggleEdit = () => {
-    setEditing(!editing);
-    form.setFieldsValue({
-      [dataIndex]: record[dataIndex],
-    });
-  };
-
-  const save = async () => {
-    try {
-      const values = await form.validateFields();
-      toggleEdit();
-      handleSave({
-        ...record,
-        ...values,
-      });
-    } catch (errInfo) {
-      console.log('Save failed:', errInfo);
-    }
-  };
-
-  let childNode = children;
-  if (editable) {
-    // Se for 'quantia', usamos InputNumber para garantir que seja um número com ponto flutuante
-    if (dataIndex === 'quantia') {
-      childNode = editing ? (
-        <Form.Item
-          style={{ margin: 0 }}
-          name={dataIndex}
-          rules={[{ required: true, message: `${title} é obrigatório.` }]} >
-          <InputNumber ref={inputRef} onPressEnter={save} onBlur={save} style={{ width: '100%' }} />
-        </Form.Item>
-      ) : (
-        <div
-          className="editable-cell-value-wrap"
-          style={{ paddingInlineEnd: 24 }}
-          onClick={toggleEdit}
-        >
-          {children}
-        </div>
-      );
-    }
-    // Se for 'parcelas', usamos InputNumber com propriedades adequadas para inteiros
-    else if (dataIndex === 'parcelas') {
-      childNode = editing ? (
-        <Form.Item
-          style={{ margin: 0 }}
-          name={dataIndex}
-          rules={[{ required: true, message: `${title} é obrigatório.` }]} >
-          <InputNumber
-            ref={inputRef}
-            onPressEnter={save}
-            onBlur={save}
-            style={{ width: '100%' }}
-            min={1}
-            step={1}
-          />
-        </Form.Item>
-      ) : (
-        <div
-          className="editable-cell-value-wrap"
-          style={{ paddingInlineEnd: 24 }}
-          onClick={toggleEdit}
-        >
-          {children}
-        </div>
-      );
-    }
-    else {
-      childNode = editing ? (
-        <Form.Item
-          style={{ margin: 0 }}
-          name={dataIndex}
-          rules={[{ required: true, message: `${title} é obrigatório.` }]} >
-          <Input ref={inputRef} onPressEnter={save} onBlur={save} />
-        </Form.Item>
-      ) : (
-        <div
-          className="editable-cell-value-wrap"
-          style={{ paddingInlineEnd: 24 }}
-          onClick={toggleEdit}
-        >
-          {children}
-        </div>
-      );
-    }
-  }
-  return <td {...restProps}>{childNode}</td>;
-};
+// Função para linha editável
+const EditableRow = ({ title, editable, children, ...restProps }) => (
+  <tr {...restProps}>
+    {children}
+  </tr>
+);
 
 const App = () => {
   const [dataSource, setDataSource] = useState([]);
   const [categories, setCategories] = useState([]);
+  const [idUsuario, setIdUsuario] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false); // Estado para controlar a exibição do modal
 
-  // Buscar dados
   useEffect(() => {
+    const storedId = localStorage.getItem('idusuario');
+    if (storedId) {
+      setIdUsuario(storedId);
+    } else {
+      message.error('Usuário não identificado. Faça login novamente.');
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!idUsuario) return;
+
     const fetchGastos = async () => {
       try {
-        const response = await axios.get('http://localhost:3000/gastos');
+        const response = await axios.get(`http://localhost:3000/gastos/usuario/${idUsuario}`);
         const formattedData = response.data.map((item) => ({
-          key: item.id, // Usando o id como chave
+          key: item.id,
           rotulo: item.rotulo,
           quantia: item.quantia,
           data: item.data,
           parcelas: item.parcelas,
           formato: item.formato,
-          categoria: item.categoriaId, // Aqui ainda usamos o id da categoria
+          categoria: item.categoriaId,
         }));
         setDataSource(formattedData);
       } catch (error) {
@@ -154,7 +59,7 @@ const App = () => {
     const fetchCategorias = async () => {
       try {
         const response = await axios.get('http://localhost:3000/categorias');
-        setCategories(response.data); // Guardamos a lista completa de categorias
+        setCategories(response.data);
       } catch (error) {
         message.error('Erro ao carregar as categorias');
       }
@@ -162,9 +67,8 @@ const App = () => {
 
     fetchGastos();
     fetchCategorias();
-  }, []);
+  }, [idUsuario]);
 
-  // Deletar item
   const handleDelete = async (id) => {
     try {
       await axios.delete(`http://localhost:3000/gastos/${id}`);
@@ -176,7 +80,6 @@ const App = () => {
     }
   };
 
-  // Função para salvar alterações
   const handleSave = async (row) => {
     const newData = [...dataSource];
     const index = newData.findIndex((item) => row.key === item.key);
@@ -192,7 +95,6 @@ const App = () => {
     }
   };
 
-  // Definir componentes editáveis para a tabela
   const columns = [
     {
       title: 'Rotulo',
@@ -200,6 +102,7 @@ const App = () => {
       editable: true,
       sorter: (a, b) => a.rotulo.localeCompare(b.rotulo),
       sortDirections: ['ascend', 'descend'],
+      width: 150,
     },
     {
       title: 'Quantia',
@@ -207,6 +110,7 @@ const App = () => {
       editable: true,
       sorter: (a, b) => a.quantia - b.quantia,
       sortDirections: ['ascend', 'descend'],
+      width: 120,
     },
     {
       title: 'Data',
@@ -214,6 +118,7 @@ const App = () => {
       editable: true,
       sorter: (a, b) => new Date(a.data) - new Date(b.data),
       sortDirections: ['ascend', 'descend'],
+      width: 150,
     },
     {
       title: 'Parcelas',
@@ -221,34 +126,24 @@ const App = () => {
       editable: true,
       sorter: (a, b) => a.parcelas - b.parcelas,
       sortDirections: ['ascend', 'descend'],
+      width: 120,
     },
     {
       title: 'Formato',
       dataIndex: 'formato',
       editable: true,
-      filters: [
-        { text: 'CREDITO', value: 'CREDITO' },
-        { text: 'DEBITO', value: 'DEBITO' },
-        { text: 'BOLETO', value: 'BOLETO' },
-        { text: 'PIX', value: 'PIX' },
-        { text: 'DINHEIRO', value: 'DINHEIRO' },
-      ],
-      onFilter: (value, record) => record.formato.includes(value),
       sorter: (a, b) => a.formato.localeCompare(b.formato),
       sortDirections: ['ascend', 'descend'],
+      width: 150,
     },
     {
       title: 'Categoria',
       dataIndex: 'categoria',
       editable: true,
-      filters: categories.map((cat) => ({
-        text: cat.nome,  // Usando 'nome' no filtro
-        value: cat.id,
-      })),
-      onFilter: (value, record) => record.categoria === value,
       sorter: (a, b) => a.categoria - b.categoria,
       sortDirections: ['ascend', 'descend'],
-      render: (text) => categories.find((cat) => cat.id === text)?.nome || text, // Exibindo o 'nome'
+      width: 200,
+      render: (text) => categories.find((cat) => cat.id === text)?.nome || text,
     },
     {
       title: 'Ações',
@@ -261,10 +156,10 @@ const App = () => {
           <Button type="danger">Deletar</Button>
         </Popconfirm>
       ),
+      width: 120,
     },
   ];
 
-  // Definindo os componentes editáveis para a tabela
   const editableColumns = columns.map((col) => ({
     ...col,
     onCell: (record) => ({
@@ -273,26 +168,50 @@ const App = () => {
       dataIndex: col.dataIndex,
       title: col.title,
       handleSave,
+      categories,
     }),
   }));
 
-  const components = {
-    body: {
-      row: EditableRow,
-      cell: EditableCell,
-    },
-  };
-
   return (
-    <><AppHeader /><div>
+    <div>
+      <AppHeader />
       <Table
+        components={{
+          body: {
+            row: EditableRow,
+            cell: EditableTable,
+          },
+        }}
         bordered
         dataSource={dataSource}
         columns={editableColumns}
-        components={components}
         rowClassName="editable-row"
-        pagination={false} />
-    </div></>
+        pagination={false}
+        scroll={{ x: 'max-content' }}
+      />
+      
+      {/* Botão para abrir o modal */}
+      <Button
+        type="primary"
+        shape="circle"
+        icon="plus"
+        size="large"
+        onClick={() => setIsModalOpen(true)}
+        style={{
+          position: 'fixed',
+          bottom: 30,
+          right: 30,
+          zIndex: 1000,
+        }}
+      />
+      
+      {/* Modal para criar novo gasto */}
+      <ModalGasto
+        isModalOpen={isModalOpen}
+        setIsModalOpen={setIsModalOpen}
+        onGastoCreated={() => setIsModalOpen(false)} 
+      />
+    </div>
   );
 };
 
