@@ -90,6 +90,8 @@ const EditableCell = ({
             style={{ width: '100%' }}
             min={1}
             step={1}
+            value={record.formato !== 'CREDITO' ? 1 : record[dataIndex]} // Se não for CREDITO, forçar valor para 1
+            disabled={record.formato !== 'CREDITO'} // Desabilitar se não for CREDITO
           />
         </Form.Item>
       ) : (
@@ -101,7 +103,8 @@ const EditableCell = ({
           {children}
         </div>
       );
-    } else if (dataIndex === 'formato') {
+    }
+     else if (dataIndex === 'formato') {
       childNode = editing ? (
         <Form.Item
           style={{ margin: 0 }}
@@ -189,6 +192,7 @@ const App = () => {
   const [categories, setCategories] = useState([]);
   const [idUsuario, setIdUsuario] = useState(null);
   const [modal1Open, setModal1Open] = useState(false);
+  const [form] = Form.useForm();
 
   useEffect(() => {
     const storedId = localStorage.getItem('idusuario');
@@ -248,9 +252,15 @@ const App = () => {
     const newData = [...dataSource];
     const index = newData.findIndex((item) => row.key === item.key);
     const item = newData[index];
+  
+    // Verificar se o formato não é 'CREDITO' e ajustar parcelas
+    if (row.formato !== 'CREDITO') {
+      row.parcelas = 1;  // Forçar parcelas para 1 se formato não for 'CREDITO'
+    }
+  
     newData.splice(index, 1, { ...item, ...row });
     setDataSource(newData);
-
+  
     try {
       await axios.put(`http://localhost:3000/gastos/${row.key}`, row);
       message.success('Gasto atualizado com sucesso');
@@ -258,6 +268,7 @@ const App = () => {
       message.error('Erro ao atualizar o gasto');
     }
   };
+  
 
   const columns = [
     {
@@ -356,31 +367,169 @@ const App = () => {
         scroll={{ x: 'max-content' }}
       />
 
-      <Modal
-        title="Detalhes"
-        style={{ top: 20 }}
-        open={modal1Open}
-        onOk={() => setModal1Open(false)}
-        onCancel={() => setModal1Open(false)}
-      >
-        <p>Conteúdo do Modal...</p>
-      </Modal>
-
-      <Button
-        type="primary"
-        shape="circle"
-        icon="plus"
-        style={{
-          position: 'fixed',
-          bottom: 20,
-          right: 20,
-          width: 60,
-          height: 60,
-          borderRadius: '50%',
-          fontSize: 24,
-        }}
-        onClick={() => setModal1Open(true)}
+<Modal
+  title="Adicionar Gasto"
+  style={{ top: 20 }}
+  open={modal1Open}
+  onOk={() => form.submit()} // Usa o método submit do form para enviar os dados
+  onCancel={() => setModal1Open(false)}
+>
+  <Form
+    form={form} // Passa o objeto form aqui
+    layout="vertical"
+    onFinish={async (values) => {
+      try {
+        const newGasto = {
+          rotulo: values.rotulo,
+          quantia: values.quantia,
+          data: new Date(values.data).toISOString(),
+          parcelas: values.parcelas,
+          formato: values.formato,
+          categoriaId: values.categoria,
+          usuarioId: parseInt(idUsuario, 10), // Conversão para inteiro
+        };
+    
+        console.log('Valores do formulário:', values);
+        console.log('JSON gerado:', newGasto);
+    
+        if (!idUsuario) {
+          console.error('Erro: idUsuario está undefined.');
+          message.error('Erro: Usuário não identificado.');
+          return;
+        }
+    
+        await axios.post('http://localhost:3000/gastos', newGasto);
+    
+        setDataSource((prevData) => [
+          ...prevData,
+          {
+            key: new Date().valueOf(),
+            ...newGasto,
+          },
+        ]);
+    
+        message.success('Gasto adicionado com sucesso');
+        setModal1Open(false);
+        form.resetFields();
+      } catch (error) {
+        console.error('Erro ao enviar o gasto:', error.response?.data || error.message);
+        message.error('Erro ao adicionar gasto');
+      }
+    }}    
+  >
+    <Form.Item
+      label="Rótulo"
+      name="rotulo"
+      rules={[{ required: true, message: 'O rótulo é obrigatório' }]}
+    >
+      <Input placeholder="Ex.: Compra de supermercado" />
+    </Form.Item>
+    <Form.Item
+      label="Quantia"
+      name="quantia"
+      rules={[{ required: true, message: 'A quantia é obrigatória' }]}
+    >
+      <InputNumber
+        style={{ width: '100%' }}
+        placeholder="Ex.: 250.75"
+        min={0.01}
+        step={0.01}
       />
+    </Form.Item>
+    <Form.Item
+  label="Data"
+  name="data"
+  rules={[{ required: true, message: 'A data é obrigatória' }]}
+>
+  <Input
+    type="date" // Alterar de datetime-local para date
+    placeholder="Selecione a data"
+  />
+</Form.Item>
+
+<Form.Item
+  label="Formato"
+  name="formato"
+  rules={[{ required: true, message: 'O formato é obrigatório' }]}
+>
+  <Select 
+    placeholder="Selecione o formato"
+    onChange={(value) => {
+      // Reseta as parcelas para 1 e desabilita se não for 'CREDITO'
+      form.setFieldsValue({
+        parcelas: value !== 'CREDITO' ? 1 : form.getFieldValue('parcelas'),
+      });
+    }}
+  >
+    <Select.Option value="CREDITO">CREDITO</Select.Option>
+    <Select.Option value="DEBITO">DEBITO</Select.Option>
+    <Select.Option value="BOLETO">BOLETO</Select.Option>
+    <Select.Option value="PIX">PIX</Select.Option>
+    <Select.Option value="DINHEIRO">DINHEIRO</Select.Option>
+  </Select>
+</Form.Item>
+
+<Form.Item
+  label="Parcelas"
+  name="parcelas"
+  rules={[{ required: true, message: 'As parcelas são obrigatórias' }]}>
+  <InputNumber
+    style={{ width: '100%' }}
+    placeholder="Ex.: 3"
+    min={1}
+    step={1}
+    value={form.getFieldValue('formato') !== 'CREDITO' ? 1 : form.getFieldValue('parcelas')} // Define 1 como valor fixo se não for 'CREDITO'
+    onChange={(value) => {
+      // Se o formato não for 'CREDITO', reseta automaticamente o número de parcelas para 1
+      if (form.getFieldValue('formato') !== 'CREDITO' && value !== 1) {
+        form.setFieldsValue({
+          parcelas: 1, // Reseta o valor para 1
+        });
+      } else {
+        form.setFieldsValue({
+          parcelas: value, // Atualiza o valor das parcelas
+        });
+      }
+    }}
+  />
+</Form.Item>
+
+    <Form.Item
+      label="Categoria"
+      name="categoria"
+      rules={[{ required: true, message: 'A categoria é obrigatória' }]}
+    >
+      <Select placeholder="Selecione a categoria">
+        {categories.map((category) => (
+          <Select.Option key={category.id} value={category.id}>
+            {category.nome}
+          </Select.Option>
+        ))}
+      </Select>
+    </Form.Item>
+  </Form>
+</Modal>
+
+<Button
+  type="primary"
+  shape="circle"
+  style={{
+    position: 'fixed',
+    bottom: 20,
+    right: 20,
+    width: 60,
+    height: 60,
+    border: 0,
+    borderRadius: '50%',
+    fontSize: 24,
+    backgroundColor: '#5ab334',  // Cor de fundo
+  }}
+  onClick={() => setModal1Open(true)}
+  icon={null}  // Remover ícone
+>
+  +
+</Button>
+
     </div>
   );
 };
