@@ -192,7 +192,9 @@ const App = () => {
   const [categories, setCategories] = useState([]);
   const [idUsuario, setIdUsuario] = useState(null);
   const [modal1Open, setModal1Open] = useState(false);
+  const [modalCategoryOpen, setModalCategoryOpen] = useState(false); // Estado para o modal de categorias
   const [form] = Form.useForm();
+  const [categoryForm] = Form.useForm();
 
   useEffect(() => {
     const storedId = localStorage.getItem('idusuario');
@@ -236,6 +238,22 @@ const App = () => {
     fetchGastos();
     fetchCategorias();
   }, [idUsuario]);
+
+  const handleAddCategory = async (values) => {
+    try {
+      const response = await axios.post('http://localhost:3000/categorias', { nome: values.nome });
+      const newCategory = response.data;
+  
+      setCategories((prevCategories) => [...prevCategories, newCategory]);
+      message.success('Categoria adicionada com sucesso');
+      categoryForm.resetFields(); // Limpa o formulário
+      setModalCategoryOpen(false); // Fecha o modal
+    } catch (error) {
+      message.error('Erro ao adicionar categoria');
+    }
+  };
+  
+
 
   const handleDelete = async (id) => {
     try {
@@ -352,20 +370,60 @@ const App = () => {
   return (
     <div>
       <AppHeader />
-      <Table
-        components={{
-          body: {
-            row: EditableRow,
-            cell: EditableCell,
-          },
-        }}
-        bordered
-        dataSource={dataSource}
-        columns={editableColumns}
-        rowClassName="editable-row"
-        pagination={false}
-        scroll={{ x: 'max-content' }}
-      />
+      <Button
+  type="primary"
+  onClick={() => setModalCategoryOpen(true)}
+  style={{
+    marginBottom: 10,
+    backgroundColor: '#5ab334',  // Cor de fundo
+  }}
+>
+  Adicionar Categoria
+</Button>
+
+
+<Table
+  components={{
+    body: {
+      row: EditableRow,
+      cell: EditableCell,
+    },
+  }}
+  bordered
+  dataSource={dataSource}
+  columns={editableColumns}
+  rowClassName="editable-row"
+  pagination={{
+    pageSize: 5, // Limita a 5 itens por página
+    position: ['bottomCenter'], // Centraliza a paginação abaixo da tabela
+  }}
+  scroll={{ x: 'max-content' }}
+  style={{ marginBottom: 20 }} // Espaçamento inferior de 20px
+/>
+
+
+<Modal
+  title="Adicionar Categoria"
+  style={{ top: 20 }}
+  open={modalCategoryOpen}
+  onOk={() => categoryForm.submit()} // Enviar os dados ao clicar em OK
+  onCancel={() => setModalCategoryOpen(false)} // Fechar o modal
+>
+  <Form
+    form={categoryForm} // Objeto do formulário de categoria
+    layout="vertical"
+    onFinish={handleAddCategory} // Método que será chamado ao enviar o formulário
+  >
+    <Form.Item
+      label="Nome da Categoria"
+      name="nome"
+      rules={[{ required: true, message: 'O nome da categoria é obrigatório' }]}
+    >
+      <Input placeholder="Ex.: Alimentação, Transporte, etc." />
+    </Form.Item>
+  </Form>
+</Modal>
+
 
 <Modal
   title="Adicionar Gasto"
