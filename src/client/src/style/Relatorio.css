@@ -47,3 +47,12 @@ h1 {
     color: #333;
     font-weight: bold;
 }
+
+
+.botaoExport {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+    margin: 0 auto;
+    color: white;
+}

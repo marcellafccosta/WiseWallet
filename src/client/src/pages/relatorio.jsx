@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Pie } from '@ant-design/plots';
+import * as XLSX from 'xlsx';
 import AppHeader from '../components/Header';
 import "../style/Relatorio.css";
 
@@ -16,8 +17,8 @@ const Relatorio = () => {
         const date = new Date(isoDate);
         if (isNaN(date)) return '';
         const day = String(date.getDate()).padStart(2, '0');
-        const month = String(date.getMonth() + 1).padStart(2, '0'); // Corrigido para '0'
-        const year = String(date.getFullYear()); // Mantém o ano completo
+        const month = String(date.getMonth() + 1).padStart(2, '0'); 
+        const year = String(date.getFullYear());
         return `${day}/${month}/${year}`;
     };
 
@@ -26,7 +27,7 @@ const Relatorio = () => {
             try {
                 const response = await axios.get('http://localhost:3000/categorias');
                 const map = response.data.reduce((acc, item) => {
-                    acc[item.id] = item.nome; // { 1: 'Alimentação', 2: 'Transporte' }
+                    acc[item.id] = item.nome; 
                     return acc;
                 }, {});
                 setCategoryMap(map);
@@ -63,7 +64,6 @@ const Relatorio = () => {
             }
         };
 
-
         const fetchGastosPorAno = async () => {
             try {
                 const response = await axios.get('http://localhost:3000/relatorio/ano');
@@ -78,7 +78,6 @@ const Relatorio = () => {
             }
         };
 
-
         const fetchGastosPorFormato = async () => {
             try {
                 const response = await axios.get('http://localhost:3000/relatorio/formato');
@@ -92,8 +91,6 @@ const Relatorio = () => {
                 console.error('Erro ao buscar os dados por formato:', error);
             }
         };
-
-
 
         const loadData = async () => {
             await fetchCategorias();
@@ -112,19 +109,18 @@ const Relatorio = () => {
         colorField: 'type',
         radius: 0.8,
         label: {
-            type: 'spider', // Tipo de rótulo que se adapta melhor
+            type: 'spider',
             content: '{name}: {percentage}',
         },
         legend: {
             position: 'bottom',
         },
-        appendPadding: 10, // Espaçamento interno
-        autoFit: true, // Permite ajustar automaticamente ao contêiner
-        height: 300, // Altura consistente do gráfico
-        width: 300, // Largura consistente do gráfico
+        appendPadding: 10,
+        autoFit: true,
+        height: 300,
+        width: 300,
         interactions: [{ type: 'element-active' }],
     };
-
 
     const configMes = {
         data: dataMes,
@@ -138,10 +134,10 @@ const Relatorio = () => {
         legend: {
             position: 'bottom',
         },
-        appendPadding: 10, // Espaçamento interno
-        autoFit: true, // Permite ajustar automaticamente ao contêiner
-        height: 300, // Altura consistente do gráfico
-        width: 300, // Largura consistente do gráfico
+        appendPadding: 10,
+        autoFit: true,
+        height: 300,
+        width: 300,
         interactions: [{ type: 'element-active' }],
     };
 
@@ -157,10 +153,10 @@ const Relatorio = () => {
         legend: {
             position: 'bottom',
         },
-        appendPadding: 10, // Espaçamento interno
-        autoFit: true, // Permite ajustar automaticamente ao contêiner
-        height: 300, // Altura consistente do gráfico
-        width: 300, // Largura consistente do gráfico
+        appendPadding: 10,
+        autoFit: true,
+        height: 300,
+        width: 300,
         interactions: [{ type: 'element-active' }],
     };
 
@@ -176,37 +172,82 @@ const Relatorio = () => {
         legend: {
             position: 'bottom',
         },
-        appendPadding: 10, // Espaçamento interno
-        autoFit: true, // Permite ajustar automaticamente ao contêiner
-        height: 300, // Altura consistente do gráfico
-        width: 300, // Largura consistente do gráfico
+        appendPadding: 10,
+        autoFit: true,
+        height: 300,
+        width: 300,
         interactions: [{ type: 'element-active' }],
-    }
+    };
+
+    const handleExportExcel = () => {
+        if (!dataCategoria || !dataMes || !dataAno || !dataFormato) return;
+
+       
+        const categoriaData = dataCategoria.map(item => ({
+            Categoria: item.type,
+            Valor: item.valor,
+        }));
+        const mesData = dataMes.map(item => ({
+            Mês: item.type,
+            Valor: item.valor,
+        }));
+        const anoData = dataAno.map(item => ({
+            Ano: item.type,
+            Valor: item.valor,
+        }));
+        const formatoData = dataFormato.map(item => ({
+            Formato: item.type,
+            Valor: item.valor,
+        }));
+
+        const wb = XLSX.utils.book_new();
+
+        const categoriaSheet = XLSX.utils.json_to_sheet(categoriaData);
+        XLSX.utils.book_append_sheet(wb, categoriaSheet, 'Gastos por Categoria');
+
+        const mesSheet = XLSX.utils.json_to_sheet(mesData);
+        XLSX.utils.book_append_sheet(wb, mesSheet, 'Gastos por Mês');
+
+        const anoSheet = XLSX.utils.json_to_sheet(anoData);
+        XLSX.utils.book_append_sheet(wb, anoSheet, 'Gastos por Ano');
+
+        const formatoSheet = XLSX.utils.json_to_sheet(formatoData);
+        XLSX.utils.book_append_sheet(wb, formatoSheet, 'Gastos por Formato');
+
+        XLSX.writeFile(wb, 'relatorio_gastos.xlsx');
+    };
 
     return (
-        <><AppHeader /><div style={{ width: '100%', height: 'auto' }}>
-            <h1>Relatório de Gastos</h1>
-            <div className='graficos'>
-                <div style={{ marginBottom: '50px' }}>
-                    <h2>Gastos por Categoria</h2>
-                    <Pie {...configCategoria} />
-                </div>
-                <div style={{ marginBottom: '50px' }}>
-                    <h2>Gastos por Mês</h2>
-                    <Pie {...configMes} />
-                </div>
+        <>
+            <AppHeader />
+            <div style={{ width: '100%', height: 'auto' }}>
+                <h1>Relatório de Gastos</h1>
                 <div>
-                    <h2>Gastos por Ano</h2>
-                    <Pie {...configAno} />
+                    <button className='botaoExport' onClick={handleExportExcel}>
+                    Exportar para Excel
+                    </button>
                 </div>
+                <div className='graficos'>
+                    <div style={{ marginBottom: '50px' }}>
+                        <h2>Gastos por Categoria</h2>
+                        <Pie {...configCategoria} />
+                    </div>
+                    <div style={{ marginBottom: '50px' }}>
+                        <h2>Gastos por Mês</h2>
+                        <Pie {...configMes} />
+                    </div>
+                    <div>
+                        <h2>Gastos por Ano</h2>
+                        <Pie {...configAno} />
+                    </div>
 
-                <div>
-                    <h2>Gastos por Formato</h2>
-                    <Pie {...configFormato} />
+                    <div>
+                        <h2>Gastos por Formato</h2>
+                        <Pie {...configFormato} />
+                    </div>
                 </div>
-
             </div>
-        </div></>
+        </>
     );
 };
 
